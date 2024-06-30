@@ -1,4 +1,8 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
+
+use rocket::fs::FileServer;
+use tracing::{info, Level};
 
 #[get("/")]
 fn index() -> &'static str {
@@ -7,5 +11,14 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+    tracing_subscriber::fmt()
+        .with_max_level(Level::DEBUG)
+        .init();
+
+    let pub_dir = "./public";
+    info!("Using public directory {:?}", pub_dir);
+
+    rocket::build()
+        .mount("/", routes![index])
+        .mount("/public", FileServer::from(pub_dir))
 }
