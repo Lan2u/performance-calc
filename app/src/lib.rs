@@ -1,5 +1,6 @@
 // This becomes performance_calc_bg.wasm in the public folder which the browser then uses.
 
+pub mod wind;
 
 // The wasm-pack uses wasm-bindgen to build and generate JavaScript binding file.
 // Import the wasm-bindgen crate.

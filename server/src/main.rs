@@ -19,6 +19,6 @@ fn rocket() -> _ {
     info!("Using public directory {:?}", pub_dir);
 
     rocket::build()
-        .mount("/", routes![index])
-        .mount("/public", FileServer::from(pub_dir))
+        .mount("/api", routes![index])
+        .mount("/", FileServer::from(pub_dir))
 }

@@ -1,3 +1,4 @@
+use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 #[derive(Debug)]
@@ -29,7 +30,7 @@ pub enum HeadingBugSide {
 #[wasm_bindgen]
 #[derive(Debug)]
 pub struct CalculatedWindSegment {
-    human_name: str, // Better as an enum but I wanted to try passing string data.
+    // human_name: str, // Better as an enum but I wanted to try passing string data.
     start_bearing_inclusive: u16,
     end_bearing_exclusive: u16,
 
@@ -49,8 +50,8 @@ pub struct CalculatedWindInformationAtLevel {
     heading: u16,
     altitude_start_ft: u16,
     altitude_end_ft: u16,
-    fl_start_inclusive: u8,
-    fl_end_inclusive: u8,
+    fl_start_inclusive: u16,
+    fl_end_inclusive: u16,
     strength_knots: u8,
     segments: Vec<CalculatedWindSegment>,
 }
@@ -107,36 +108,36 @@ impl WindState {
         }
     }
 
-    pub fn recalculate(self) {
+    pub fn recalculate(&mut self) {
         self.calculated = Some(CalculatedWindInformation{
             levels: vec!(
                 CalculatedWindInformationAtLevel {
-                    heading: u16,
-                    altitude_start_ft: u16,
-                    altitude_end_ft: u16,
-                    fl_start_inclusive: u8,
-                    fl_end_inclusive: u8,
-                    strength_knots: u8,
+                    heading: 0,
+                    altitude_start_ft: 0,
+                    altitude_end_ft: 60000,
+                    fl_start_inclusive: 0,
+                    fl_end_inclusive: 600,
+                    strength_knots: 0,
                     segments: vec!(
                         CalculatedWindSegment {
-                            human_name: "Everywhere",
+                            // human_name: "Everywhere",
                             start_bearing_inclusive: 0,
                             end_bearing_exclusive: 361,
 
                             head_wind_knots: 0,
-                            head_wind_time_correction: 0,
+                            head_wind_time_correction_seconds: 0,
                             cross_wind_knots: 0,
-                            heading_correction_required_bearing: 0,
+                            heading_correction_relative_bearing: 0,
 
-                            heading_correction_double: 0,
-                            heading_correction_triple: 0,
+                            heading_correction_relative_bearing_double: 0,
+                            heading_correction_relative_bearing_triple: 0,
 
                             human_fly_heading_bug_side: HeadingBugSide::Center,
                         }
                     )
                 }
             ),
-            for_desired_track: CalculatedForDesiredTrack {
+            for_desired_track: Some(CalculatedForDesiredTrack {
                 cross_wind_knots: 0,
                 heading_absolute: 0,
                 heading_absolute_double: 0,
@@ -148,7 +149,7 @@ impl WindState {
                 ground_speed_knots: 0,
 
                 segment_index: 0,
-            }
+            })
         })
     }
 }
